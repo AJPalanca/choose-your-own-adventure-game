@@ -97,7 +97,8 @@ public class Player
 
         if (Race == "Halfling")
         {
-            Strength -= modifier;
+            // Never let strength drop below 1, or the player could never hit.
+            Strength = Math.Max(1, Strength - modifier);
             return -modifier;
         }
 
@@ -117,7 +118,9 @@ public class Player
     private void RollHealthPoints(Messages messages, int strengthModifier)
     {
         PromptRoll(messages.GetMessage("roll_health"), messages);
-        HealthPoints = _die.Roll(20) + strengthModifier;
+        // Never start with 0 or negative health (possible for Halflings,
+        // whose strength modifier is negative), or the player loses instantly.
+        HealthPoints = Math.Max(1, _die.Roll(20) + strengthModifier);
     }
 
     private void PromptForNextAction(Messages messages)
