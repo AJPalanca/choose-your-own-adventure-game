@@ -75,6 +75,13 @@ public class Combat
             if (input == "a" || input == "attack")
                 return CombatChoice.Attack;
 
+            // Checking the Inventory is free: it doesn't use the player's turn.
+            if (input == "i" || input == "inventory")
+            {
+                Console.WriteLine(player.GetInventoryDisplay(messages));
+                continue;
+            }
+
             if (canDrink && (input == "d" || input == "drink"))
             {
                 int healthBefore = player.HealthPoints;

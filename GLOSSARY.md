@@ -24,6 +24,14 @@ _Avoid_: Shop visit, store, transaction
 The coins a character carries, given as a fixed purse when the character is created.
 _Avoid_: Money, coins, currency, funds
 
+**Character Summary**:
+The full description of a character: who they are (name, race, occupation), their abilities and health, and their Inventory.
+_Avoid_: Stats, character sheet, profile
+
+**Inventory**:
+Everything a character is carrying or wearing: their weapon, any Magical Armor, their Healing Potions, and their Gold. The player can check it at the crossroads or during combat.
+_Avoid_: Bag, items, equipment, gear, belongings
+
 **Maximum Health**:
 The most health a character can have: their health when character creation ends, plus any health added by Magical Armor. Healing can never take a character above it.
 _Avoid_: Max HP, full health, health cap

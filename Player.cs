@@ -195,6 +195,24 @@ public class Player
         Console.WriteLine(messages.GetMessage("stats_potions") + HealingPotions);
     }
 
+    // Everything the character is carrying or wearing. Every line is always shown.
+    public string GetInventoryDisplay(Messages messages)
+    {
+        string none = messages.GetMessage("inventory_none");
+
+        string weapon = Weapon == null
+            ? messages.GetMessage("stats_weapon") + none
+            : string.Format(messages.GetMessage("inventory_weapon"),
+                messages.TranslateWeaponForDisplay(Weapon.Type), Weapon.MaxDamage);
+
+        return string.Join(Environment.NewLine,
+            messages.GetMessage("inventory_header"),
+            weapon,
+            messages.GetMessage("stats_armor") + (HasMagicalArmor ? messages.GetMessage("magical_armor") : none),
+            string.Format(messages.GetMessage("inventory_potions"), HealingPotions, MaxHealingPotions),
+            messages.GetMessage("stats_gold") + Gold);
+    }
+
     public int RollAttack()
     {
         return _die.Roll(20);

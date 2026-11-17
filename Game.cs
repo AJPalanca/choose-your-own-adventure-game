@@ -45,7 +45,7 @@ public class Game
                 bool inAdventureMenu = true;
                 while (inAdventureMenu)
                 {
-                    string selectedPath = PromptForPath(messages);
+                    string selectedPath = PromptForPath(player, messages);
 
                     if (selectedPath == "exit")
                     {
@@ -112,13 +112,20 @@ public class Game
                trimmed == "r" || trimmed == "retreat";
     }
 
-    private string PromptForPath(Messages messages)
+    // Returns "north", "south" or "exit". Checking the Inventory shows it and asks again.
+    public string PromptForPath(Player player, Messages messages)
     {
         while (true)
         {
             Console.WriteLine(messages.GetMessage("path_prompt_full"));
             Console.Write(messages.GetMessage("enter_choice"));
             string? input = Console.ReadLine()?.Trim().ToLower();
+
+            if (input == "i" || input == "inventory")
+            {
+                Console.WriteLine(player.GetInventoryDisplay(messages));
+                continue;
+            }
 
             if (input == "north" || input == "n")
                 return "north";
