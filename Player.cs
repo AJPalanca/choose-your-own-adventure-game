@@ -12,6 +12,11 @@ public class Player
 
     public Weapon? Weapon { get; set; }
 
+    public const int StartingGold = 100;
+    public int Gold { get; set; } = StartingGold;
+    public bool HasMagicalArmor { get; set; }
+    public bool HasMetMerchant { get; set; }
+
     public void CreateCharacter(Messages messages)
     {
         Race = PromptForRace(messages);
@@ -154,6 +159,11 @@ public class Player
             Console.WriteLine(messages.GetMessage("stats_weapon") + messages.TranslateWeaponForDisplay(Weapon.Type));
             Console.WriteLine(messages.GetMessage("stats_damage") + Weapon.MaxDamage);
         }
+
+        if (HasMagicalArmor)
+            Console.WriteLine(messages.GetMessage("stats_armor") + messages.GetMessage("magical_armor"));
+
+        Console.WriteLine(messages.GetMessage("stats_gold") + Gold);
     }
 
     public int RollAttack()

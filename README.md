@@ -35,6 +35,22 @@ To run the application, type the following into the terminal, which looks for an
 dotnet run
 ```
 
+## Gameplay: The Paths
+After creating a character (who starts with **100 gold**), you reach a crossroads:
+
+- **North**: the dragon Smolderfang guards a hoard of gold. Fight or retreat; either way, the adventure ends.
+- **South**: on your first trip south you meet the **Merchant**, who sells exactly one item per traveller:
+
+  | Choice | Item | Price | Effect |
+  |---|---|---|---|
+  | `1` / `armor` | Magical Armor | 60 gold | +10 health points when you put it on |
+  | `2` / `weapon` | Magical Weapon | 80 gold | Enchants your weapon: +4 maximum damage (e.g. long sword → magical long sword) |
+  | `3` / `leave` | — | — | Walk away with your gold |
+
+  After the visit you return to the crossroads. On later trips south the merchant has moved on.
+
+The purchase message shows your new health or weapon damage and your remaining gold. Game terms are defined in [GLOSSARY.md](GLOSSARY.md).
+
 ## Build the App: 
 This command is optional because dotnet run will also build the app prior to running the app if needed. But to build the application without running the application, type this command in the terminal. Building the app let's the compiler compile and warn you of any compile errors or problems.
 ```

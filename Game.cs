@@ -55,7 +55,7 @@ public class Game
                     }
                     else if (selectedPath == "south")
                     {
-                        Console.WriteLine(messages.GetMessage("south_path_narrative"));
+                        HandleSouthPath(player, messages);
                     }
                     else if (selectedPath == "north")
                     {
@@ -131,6 +131,19 @@ public class Game
 
             Console.WriteLine(messages.GetMessage("path_invalid"));
         }
+    }
+
+    // First trip south: the Merchant Encounter. Later trips: the merchant has moved on.
+    public void HandleSouthPath(Player player, Messages messages)
+    {
+        if (!player.HasMetMerchant)
+        {
+            new Merchant().RunEncounter(player, messages);
+            return;
+        }
+
+        Console.WriteLine(messages.GetMessage("merchant_gone"));
+        Console.WriteLine(messages.GetMessage("south_path_narrative"));
     }
 
     private void HandleDragonEncounter(Player player, Dragon dragon, Messages messages)
