@@ -1,3 +1,10 @@
+public enum HealingResult
+{
+    Drank,
+    NoPotion,
+    AlreadyAtFullHealth
+}
+
 public class Player
 {
     private readonly Die _die = new Die();
@@ -16,6 +23,26 @@ public class Player
     public int Gold { get; set; } = StartingGold;
     public bool HasMagicalArmor { get; set; }
     public bool HasMetMerchant { get; set; }
+
+    public const int HealingPotionStrength = 8;
+    public const int MaxHealingPotions = 3;
+    public int MaxHealthPoints { get; set; }
+    public int HealingPotions { get; set; }
+    public bool HasFoundPotion { get; set; }
+
+    // Drinks one Healing Potion. Never heals above Maximum Health.
+    public HealingResult DrinkHealingPotion()
+    {
+        if (HealingPotions <= 0)
+            return HealingResult.NoPotion;
+
+        if (HealthPoints >= MaxHealthPoints)
+            return HealingResult.AlreadyAtFullHealth;
+
+        HealingPotions--;
+        HealthPoints = Math.Min(MaxHealthPoints, HealthPoints + HealingPotionStrength);
+        return HealingResult.Drank;
+    }
 
     public void CreateCharacter(Messages messages)
     {
@@ -126,6 +153,7 @@ public class Player
         // Never start with 0 or negative health (possible for Halflings,
         // whose strength modifier is negative), or the player loses instantly.
         HealthPoints = Math.Max(1, _die.Roll(20) + strengthModifier);
+        MaxHealthPoints = HealthPoints;
     }
 
     private void PromptForNextAction(Messages messages)
@@ -164,6 +192,7 @@ public class Player
             Console.WriteLine(messages.GetMessage("stats_armor") + messages.GetMessage("magical_armor"));
 
         Console.WriteLine(messages.GetMessage("stats_gold") + Gold);
+        Console.WriteLine(messages.GetMessage("stats_potions") + HealingPotions);
     }
 
     public int RollAttack()

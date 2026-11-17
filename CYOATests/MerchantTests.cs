@@ -209,7 +209,7 @@ public class MerchantTests
     }
 
     [DataTestMethod]
-    [DataRow("3\n")]
+    [DataRow("4\n")]
     [DataRow("leave\n")]
     [DataRow("  LEAVE\n")]
     [DataRow("")] // closed input
@@ -279,7 +279,6 @@ public class MerchantTests
 
         string output = second.ToString();
         StringAssert.Contains(output, messages.GetMessage("merchant_gone"));
-        StringAssert.Contains(output, messages.GetMessage("south_path_narrative"));
         Assert.IsFalse(output.Contains(messages.GetMessage("merchant_intro")));
         Assert.IsFalse(player.Weapon!.IsMagical);
     }
@@ -291,7 +290,7 @@ public class MerchantTests
         Player player = NewFighter();
         Messages messages = GetMessages();
 
-        Console.SetIn(new StringReader("3\n"));
+        Console.SetIn(new StringReader("4\n"));
         Console.SetOut(new StringWriter());
         game.HandleSouthPath(player, messages);
 

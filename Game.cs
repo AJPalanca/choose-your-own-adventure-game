@@ -133,7 +133,8 @@ public class Game
         }
     }
 
-    // First trip south: the Merchant Encounter. Later trips: the merchant has moved on.
+    // First trip south: the Merchant Encounter. Later trips: the merchant has moved on,
+    // and a Healing Potion lies on the path until the player picks it up.
     public void HandleSouthPath(Player player, Messages messages)
     {
         if (!player.HasMetMerchant)
@@ -143,6 +144,21 @@ public class Game
         }
 
         Console.WriteLine(messages.GetMessage("merchant_gone"));
+
+        if (!player.HasFoundPotion)
+        {
+            if (player.HealingPotions >= Player.MaxHealingPotions)
+            {
+                Console.WriteLine(messages.GetMessage("south_potion_left"));
+                return;
+            }
+
+            player.HasFoundPotion = true;
+            player.HealingPotions++;
+            Console.WriteLine(string.Format(messages.GetMessage("south_found_potion"), player.HealingPotions));
+            return;
+        }
+
         Console.WriteLine(messages.GetMessage("south_path_narrative"));
     }
 

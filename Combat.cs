@@ -18,42 +18,78 @@ public class Combat
     {
         Console.WriteLine(GetCombatStatsDisplay());
 
+        bool playerAttacks = true;
+
         while (true)
         {
-            PlayerAttacksDragonSequence();
+            if (playerAttacks)
+            {
+                PlayerAttacksDragonSequence();
 
-            if (dragon.HealthPoints <= 0)
-                return true;
+                if (dragon.HealthPoints <= 0)
+                    return true;
+            }
 
             DragonAttacksPlayerSequence();
 
             if (player.HealthPoints <= 0)
                 return false;
 
-            if (!PromptToKeepAttacking())
+            CombatChoice choice = PromptForCombatChoice();
+
+            if (choice == CombatChoice.Retreat)
             {
                 PlayerRetreated = true;
                 Console.WriteLine(messages.GetMessage("retreat_combat"));
                 return false;
             }
+
+            // Drinking a Healing Potion uses up the player's attack for the round.
+            playerAttacks = choice == CombatChoice.Attack;
         }
     }
 
-    // Keeps asking until the player types a valid choice.
-    // Returns true to attack again, false to retreat.
-    private bool PromptToKeepAttacking()
+    private enum CombatChoice
+    {
+        Attack,
+        Retreat,
+        DrankPotion
+    }
+
+    // Keeps asking until the player attacks, retreats, or successfully drinks a Healing Potion.
+    // The drink option is only offered while the player carries a potion.
+    private CombatChoice PromptForCombatChoice()
     {
         while (true)
         {
-            Console.WriteLine(messages.GetMessage("attack_prompt"));
+            bool canDrink = player.HealingPotions > 0;
+            Console.WriteLine(canDrink
+                ? string.Format(messages.GetMessage("attack_prompt_with_potion"), player.HealingPotions)
+                : messages.GetMessage("attack_prompt"));
             string? input = Console.ReadLine()?.Trim().ToLower();
 
             // null means input was closed (nothing more can be typed), so retreat.
             if (input == null || input == "r" || input == "retreat")
-                return false;
+                return CombatChoice.Retreat;
 
             if (input == "a" || input == "attack")
-                return true;
+                return CombatChoice.Attack;
+
+            if (canDrink && (input == "d" || input == "drink"))
+            {
+                int healthBefore = player.HealthPoints;
+
+                if (player.DrinkHealingPotion() == HealingResult.Drank)
+                {
+                    Console.WriteLine(string.Format(messages.GetMessage("combat_drank_potion"),
+                        player.HealthPoints - healthBefore, player.HealthPoints, player.HealingPotions));
+                    return CombatChoice.DrankPotion;
+                }
+
+                // Refusing a drink at full health costs neither the potion nor the turn.
+                Console.WriteLine(messages.GetMessage("combat_already_full_health"));
+                continue;
+            }
 
             Console.WriteLine(messages.GetMessage("invalid"));
         }
@@ -69,6 +105,8 @@ public class Combat
         output.Add(messages.GetMessage("stats_strength") + player.Strength);
         output.Add(messages.GetMessage("stats_agility") + player.Agility);
         output.Add(messages.GetMessage("stats_health") + player.HealthPoints);
+        output.Add(messages.GetMessage("stats_max_health") + player.MaxHealthPoints);
+        output.Add(messages.GetMessage("stats_potions") + player.HealingPotions);
 
         if (player.Weapon != null)
         {
